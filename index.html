@@ -1,184 +1,163 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- PWA Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mild">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    
-    <meta name="theme-color" content="#007aff">
-    
-    <!-- Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <title>Mild iOS-style App</title>
-    <style>
-        /* Global styles */
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            background-color: #f4f4f7;
-            height: 100vh;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#007aff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mild" />
+  
+  <!-- PWA Icons per iOS (tema chiaro/scuro) -->
+  <link rel="apple-touch-icon" href="icons/icon-light.png" media="(prefers-color-scheme: light)" />
+  <link rel="apple-touch-icon" href="icons/icon-dark.png" media="(prefers-color-scheme: dark)" />
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json" />
 
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+  <title>Mild iOS-style PWA</title>
 
-        /* Topbar style */
-        .topbar {
-            background-color: #007aff;
-            color: white;
-            padding: 10px;
-            font-size: 20px;
-            text-align: center;
-            user-select: none;
-            position: relative;
-        }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f2f2f2;
+      overflow: hidden;
+    }
 
-        .topbar button {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: transparent;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-        }
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-        /* App container (sections that will be swiped) */
-        .content-container {
-            display: flex;
-            flex-direction: row;
-            transition: transform 0.5s ease-in-out;
-            height: 100%;
-        }
+    .topbar {
+      background-color: #007aff;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
 
-        .section {
-            min-width: 100%;
-            background-color: #ffffff;
-            border-left: 1px solid #ddd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            text-align: center;
-        }
+    .topbar button {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: white;
+    }
 
-        /* Sections Styles */
-        .section-1 {
-            background-color: #f8f8f8;
-        }
-        .section-2 {
-            background-color: #d1e3ff;
-        }
-        .section-3 {
-            background-color: #e0f7e8;
-        }
+    .content-container {
+      display: flex;
+      transition: transform 0.5s ease;
+      height: calc(100vh - 110px);
+    }
 
-        /* Swipeable effect */
-        .swipe {
-            overflow: hidden;
-            height: 100%;
-            position: relative;
-        }
+    .section {
+      flex: 0 0 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: 500;
+    }
 
-        /* Footer */
-        .footer {
-            background-color: #007aff;
-            color: white;
-            padding: 15px;
-            font-size: 16px;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-        
-    </style>
+    .section-1 { background-color: #f8f8f8; }
+    .section-2 { background-color: #e0f0ff; }
+    .section-3 { background-color: #e2f7e2; }
+
+    .footer {
+      background-color: #007aff;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+    }
+
+    .footer button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Topbar -->
-        <div class="topbar">
-            Mild App
-            <button id="menuButton">☰</button>
-        </div>
-
-        <!-- Content container with swipe functionality -->
-        <div id="content" class="content-container swipe">
-            <div class="section section-1">Modalità 1: Home</div>
-            <div class="section section-2">Modalità 2: App</div>
-            <div class="section section-3">Modalità 3: Impostazioni</div>
-        </div>
-
-        <!-- Footer with swipe buttons -->
-        <div class="footer">
-            <button id="prevBtn">← Indietro</button>
-            <button id="nextBtn">Avanti →</button>
-        </div>
+  <div class="app-container">
+    <div class="topbar">
+      <button id="menuButton">☰</button>
+      Mild App
     </div>
 
-    <script>
-        let currentIndex = 0; // Track the current section
-        const contentContainer = document.getElementById('content');
-        const sections = document.querySelectorAll('.section');
-        
-        // Handle the swipe functionality
-        let startX = 0;
-        
-        contentContainer.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-        });
-        
-        contentContainer.addEventListener('touchmove', (e) => {
-            let endX = e.touches[0].clientX;
-            if (startX - endX > 50) {
-                nextSection();
-            } else if (endX - startX > 50) {
-                prevSection();
-            }
-        });
+    <div id="content" class="content-container">
+      <div class="section section-1">🛏️ Modalità 1: Standby</div>
+      <div class="section section-2">💡 Modalità 2: Dashboard</div>
+      <div class="section section-3">⚙️ Modalità 3: Impostazioni</div>
+    </div>
 
-        // Handle next button
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            nextSection();
-        });
+    <div class="footer">
+      <button id="prevBtn">← Indietro</button>
+      <button id="nextBtn">Avanti →</button>
+    </div>
+  </div>
 
-        // Handle prev button
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            prevSection();
-        });
+  <script>
+    let currentIndex = 0;
+    const container = document.getElementById('content');
+    const sections = document.querySelectorAll('.section');
 
-        // Change section based on index
-        function updateSection() {
-            contentContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
+    // Swipe touch
+    let startX = 0;
+    container.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    });
 
-        // Move to next section
-        function nextSection() {
-            if (currentIndex < sections.length - 1) {
-                currentIndex++;
-                updateSection();
-            }
-        }
+    container.addEventListener('touchmove', e => {
+      const deltaX = e.touches[0].clientX - startX;
+      if (deltaX < -50) nextSection();
+      else if (deltaX > 50) prevSection();
+    });
 
-        // Move to previous section
-        function prevSection() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateSection();
-            }
-        }
-    </script>
+    document.getElementById('nextBtn').addEventListener('click', nextSection);
+    document.getElementById('prevBtn').addEventListener('click', prevSection);
+
+    function updateView() {
+      container.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    function nextSection() {
+      if (currentIndex < sections.length - 1) {
+        currentIndex++;
+        updateView();
+      }
+    }
+
+    function prevSection() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateView();
+      }
+    }
+
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('✅ Service worker registrato:', reg.scope))
+          .catch(err => console.error('❌ SW registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>
